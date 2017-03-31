@@ -11,4 +11,4 @@ setup(
     url='https://github.com/a-r-g-v/push7-python',
     test_suite='tests',
     packages=['push7'],
-    install_requires=['requests', 'requests-mock', 'simplejson', 'six'])
+    install_requires=['requests', 'simplejson', 'six', 'enum34'])
