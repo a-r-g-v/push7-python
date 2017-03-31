@@ -1,11 +1,15 @@
 # encoding: utf8
 
 
-class ClientErrorException(Exception):
+class Push7BaseException(Exception):
     pass
 
 
-class ServerErrorException(Exception):
+class ClientErrorException(Push7BaseException):
+    pass
+
+
+class ServerErrorException(Push7BaseException):
     pass
 
 

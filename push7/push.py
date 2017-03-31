@@ -6,7 +6,13 @@ import simplejson as json
 
 
 class Push(object):
-    def __init__(self, title, body, icon_url, url, transmission_time, client):
+    def __init__(self,
+                 title,
+                 body,
+                 icon_url,
+                 url,
+                 transmission_time=None,
+                 client=None):
         # type: (str, str, str, str, Union[datetime, None], Any) -> None
         self.title = title
         self.body = body
@@ -24,7 +30,7 @@ class Push(object):
             'icon': self.icon_url,
             'url': self.url,
             'transmission_time':
-            self.transmission_time.strftime('%y-%m-%d %h:%m'),
+            self.transmission_time.strftime('%Y-%m-%d %H:%m'),
         }
 
     @property
@@ -45,9 +51,16 @@ class PushWithQuery(Push):
         _nor = "NOR"
         _nand = "NAND"
 
-    def __init__(self, title, body, icon_url, url, transmission_time, client,
-                 mode, parameters):
-        # type: (str, str, str, str, Union[datetime, None], Any, PushWithQuery.Mode, List[str]) -> None
+    def __init__(self,
+                 title,
+                 body,
+                 icon_url,
+                 url,
+                 mode,
+                 parameters,
+                 transmission_time=None,
+                 client=None):
+        # type: (str, str, str, str, PushWithQuery.Mode, List[str], Union[datetime, None], Any) -> None
         super(PushWithQuery, self).__init__(title, body, icon_url, url,
                                             transmission_time, client)
         self.mode = mode
@@ -55,19 +68,11 @@ class PushWithQuery(Push):
 
     def to_dict(self):
         # type: () -> Dict[str, Any]
-        return {
-            'title':
-            self.title,
-            'body':
-            self.body,
-            'icon':
-            self.icon_url,
-            'url':
-            self.url,
-            'transmission_time':
-            self.transmission_time.strftime('%y-%m-%d %h:%m'),
+        push_dict = super(PushWithQuery, self).to_dict()
+        push_dict.update({
             'query': {
-                'mode': self.mode,
+                'mode': self.mode.value,
                 'params': self.parameters
             }
-        }
+        })
+        return push_dict

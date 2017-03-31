@@ -1,11 +1,12 @@
 from typing import List, Dict, Any, Union
+from datetime import datetime
 from push7.push import Push, PushWithQuery
 from push7.exceptions import (UnauthorizedException, ForbiddenException,
                               NotFoundException, MethodNotAllowedException,
                               ClientErrorException, ServerErrorException)
 
 
-def __throw_exception(status_code, error):
+def _throw_exception(status_code, error):
     # type: (int, str) -> None
 
     if status_code == 401:
@@ -46,23 +47,53 @@ class Client(object):
         # type: () -> str
         return self.__endpoint
 
-    def push(self, title, body, icon_url, url, transmission_time):
+    def make_headers(self):
+        # type: () -> Dict[str, str]
+        return {'Authorization': 'Bearer {token}'.format(token=self.__apikey)}
+
+    def push(self, title, body, icon_url, url, transmission_time=None):
         # type: (str, str, str, str, Union[datetime, None]) -> Push
-        return Push(title, body, icon_url, url, self, transmission_time)
+        return Push(
+            title,
+            body,
+            icon_url,
+            url,
+            transmission_time=transmission_time,
+            client=self)
 
-    def push_with_query(self, title, body, icon_url, url, transmission_time,
-                        mode, parameters):
-        # type: (str, str, str, str, Union[datetime, None], PushWithQuery.Mode, List[str]) -> PushWithQuery
-        return PushWithQuery(title, body, icon_url, url, transmission_time,
-                             self, mode, parameters)
+    def push_with_query(self,
+                        title,
+                        body,
+                        icon_url,
+                        url,
+                        mode,
+                        parameters,
+                        transmission_time=None):
+        # type: (str, str, str, str, PushWithQuery.Mode, List[str], Union[datetime, None]) -> PushWithQuery
+        return PushWithQuery(
+            title,
+            body,
+            icon_url,
+            url,
+            mode,
+            parameters,
+            transmission_time=transmission_time,
+            client=self)
 
-    def _do_api_request(self, path, jsonify_dict):
-        # type: (str, Dict[str, Any]) -> Any
+    def _do_api_request(self, path, jsonify_dict, headers=None):
+        # type: (str, Dict[str, Any], Union[Dict[str, Any], None]) -> Any
         import requests
-        response = requests.post(path, json=jsonify_dict)
+
+        if headers is None:
+            headers = {}
+
+        headers.update(self.make_headers())
+
+        response = requests.post(
+            self.endpoint + path, json=jsonify_dict, headers=headers)
         body = response.json()
 
         if 'error' in body:
-            __throw_exception(response.status_code, body['error'])  # pylint: disable=W0212
+            _throw_exception(response.status_code, body['error'])  # pylint: disable=W0212
 
         return body
