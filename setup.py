@@ -1,9 +1,17 @@
 from setuptools import setup
 
+import os
+
+
+if os.path.exists('README.md'):
+    long_description = open('README.md').read()
+
+
 setup(
     name='push7',
-    version='0.0.1',
+    version='0.0.2',
     description='Python API Client for Push7',
+    long_description=open('README.md').read(),
     license="MIT",
     keywords="push7",
     author='a_r_g_v',
