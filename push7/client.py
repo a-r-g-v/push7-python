@@ -4,6 +4,19 @@ from push7.push import Push, PushWithQuery
 from push7.exceptions import (UnauthorizedException, ForbiddenException,
                               NotFoundException, MethodNotAllowedException,
                               ClientErrorException, ServerErrorException)
+from requests import Session
+
+
+def make_requests_with_retries():
+    # type: () -> Session
+    from requests.adapters import HTTPAdapter
+    from requests.packages.urllib3.util.retry import Retry
+    session = Session()
+    retries = Retry(
+        total=5, backoff_factor=1, status_forcelist=[502, 503, 504])
+    session.mount('https://', HTTPAdapter(max_retries=retries))
+    session.mount('http://', HTTPAdapter(max_retries=retries))
+    return session
 
 
 def _throw_exception(status_code, error):
@@ -82,13 +95,13 @@ class Client(object):
 
     def _do_api_request(self, path, jsonify_dict, headers=None):
         # type: (str, Dict[str, Any], Union[Dict[str, Any], None]) -> Any
-        import requests
 
         if headers is None:
             headers = {}
 
         headers.update(self.make_headers())
 
+        requests = make_requests_with_retries()
         response = requests.post(
             self.endpoint + path, json=jsonify_dict, headers=headers)
         body = response.json()
