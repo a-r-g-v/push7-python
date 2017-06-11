@@ -10,7 +10,7 @@ if os.path.exists('README.md'):
 
 setup(
     name='push7',
-    version='0.0.3',
+    version='0.0.4',
     description='Python API Client for Push7',
     long_description=long_description,
     license="MIT",
