@@ -43,6 +43,18 @@ client.push_with_query("title", "body", "http://arg.vc/icon.png", "http://arg.vc
 
 # For Contributors
 
+## Testing
+
+If you want to run tests, you should set environment vars 'PUSH7_APPNO' and 'PUSH7_APIKEY'.
+After setting environment vars, you can run tests by below commands.
+
+```bash
+tox
+```
+
+
+
+
 ## Pylint
 ```bash
 cd push7
@@ -58,7 +70,7 @@ mypy --ignore-missing-imports *.py
 ## Yapf
 ```bash
 cd pushy
-yapf -r -i .
+yapf -r -i push7/
 ```
 
 

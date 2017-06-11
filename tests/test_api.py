@@ -3,12 +3,18 @@ from requests_mock import mock
 from push7 import Client
 from push7.push import PushWithQuery as query
 import unittest
+import os
 
 
 class APITest(unittest.TestCase):
     def setUp(self):
-        appno, apikey = 'hoge', 'hoge'
-        self.client = Client(appno, apikey)
+        self.appno = os.environ.get('PUSH7_APPNO')
+        self.apikey = os.environ.get('PUSH7_APIKEY')
+
+        if not self.appno or not self.apikey:
+            raise unittest.SkipTest
+
+        self.client = Client(self.appno, self.apikey)
 
     def test_push(self):
         self.client.push("poe", "poe", "http://google.com",
