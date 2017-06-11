@@ -3,4 +3,4 @@
 from push7.client import Client
 
 __all__ = ['Client']
-VERSION = '0.0.3'
+VERSION = '0.0.4'
