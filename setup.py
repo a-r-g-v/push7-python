@@ -10,7 +10,7 @@ if os.path.exists('README.md'):
 
 setup(
     name='push7',
-    version='0.0.4',
+    version='0.0.5',
     description='Python API Client for Push7',
     long_description=long_description,
     license="MIT",
@@ -20,4 +20,4 @@ setup(
     url='https://github.com/a-r-g-v/push7-python',
     test_suite='tests',
     packages=['push7'],
-    install_requires=['requests', 'simplejson', 'six', 'enum34'])
+    install_requires=['requests', 'simplejson', 'six', 'enum34', 'typing'])
