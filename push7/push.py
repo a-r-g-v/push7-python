@@ -30,7 +30,7 @@ class Push(object):
             'icon': self.icon_url,
             'url': self.url,
             'transmission_time':
-            self.transmission_time.strftime('%Y-%m-%d %H:%m'),
+            self.transmission_time.strftime('%Y-%m-%d %H:%M'),
         }
 
     @property
